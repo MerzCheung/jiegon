@@ -4,8 +4,10 @@ import cn.wanghaomiao.seimi.def.BaseSeimiCrawler;
 import cn.wanghaomiao.seimi.struct.Request;
 import cn.wanghaomiao.seimi.struct.Response;
 import com.mingzhang.jiegon.dao.CrawlerDao;
+import com.mingzhang.jiegon.entity.CarCcEntity;
 import com.mingzhang.jiegon.entity.CarClassEntity;
 import com.mingzhang.jiegon.entity.CarListEntity;
+import com.mingzhang.jiegon.entity.CarYearEntity;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.seimicrawler.xpath.JXDocument;
@@ -24,7 +26,8 @@ public class CarCrawler extends BaseSeimiCrawler {
     @Autowired
     private CrawlerDao crawlerDao;
 
-    public static final String BRAND_URL = "http://www.jiegon.com/mobile/adapter.php?act=&adapter_id=13&cat_id=2&attr_type_id=1&search_type=type1&brand_id=%s";
+    public static final String TYPE1_URL = "http://www.jiegon.com/mobile/adapter.php?act=&adapter_id=13&cat_id=2&attr_type_id=1&search_type=type1&brand_id=%s";
+    public static final String TYPE2_URL = "http://www.jiegon.com/mobile/adapter.php?act=&adapter_id=13&cat_id=2&attr_type_id=1&search_type=type2&type1_id=%s";
 
     @Override
     public String[] startUrls() {
@@ -55,9 +58,9 @@ public class CarCrawler extends BaseSeimiCrawler {
                     carListEntity.setLayerModel(layerModel);
                     carListEntity.setName(name);
                     carListEntity.setImg(img);
-                    crawlerDao.saveCarList(carListEntity);
+//                    crawlerDao.saveCarList(carListEntity);
                     if (id.equals("1")) {
-                        push(Request.build(String.format(BRAND_URL, id), CarCrawler::getBrand));
+                        push(Request.build(String.format(TYPE1_URL, id), CarCrawler::getType1));
                     }
                 }
             }
@@ -66,7 +69,7 @@ public class CarCrawler extends BaseSeimiCrawler {
         }
     }
 
-    public void getBrand(Response response) {
+    public void getType1(Response response) {
         String carListId = response.getRealUrl().substring(response.getRealUrl().lastIndexOf("=") + 1);
         JXDocument doc = response.document();
         Object ele = doc.selOne("//div[@class='asidesubmenu_lists']");
@@ -81,9 +84,44 @@ public class CarCrawler extends BaseSeimiCrawler {
                 carClassEntity.setCarListId(Integer.valueOf(carListId));
                 carClassEntity.setCarType(carType);
                 String href = el.attr("href");
-                carClassEntity.setId(Integer.valueOf(href.substring(href.lastIndexOf("=") + 1)));
+                String id = href.substring(href.lastIndexOf("=") + 1);
+                carClassEntity.setId(Integer.valueOf(id));
                 carClassEntity.setCarStyle(el.text());
-                crawlerDao.saveCarClass(carClassEntity);
+//                crawlerDao.saveCarClass(carClassEntity);
+                if (id.equals("1")) {
+                    push(Request.build(String.format(TYPE2_URL, id), CarCrawler::getType2));
+                }
+            }
+        }
+    }
+
+    public void getType2(Response response) {
+        String carClassId = response.getRealUrl().substring(response.getRealUrl().lastIndexOf("=") + 1);
+        JXDocument doc = response.document();
+        List<Object> sels = doc.sel("//div[@class='asidesubmenu_top_cont']");
+        for (int i = 0; i < sels.size(); i++) {
+            Element element = (Element) sels.get(i);
+            if (i == 0) {
+                // 年限
+                Elements children = element.children();
+                for (Element element2 : children) {
+                    CarYearEntity carYearEntity = new CarYearEntity();
+                    carYearEntity.setCarClassId(Integer.valueOf(carClassId));
+                    carYearEntity.setId(Integer.valueOf(element2.attr("data-id")));
+                    carYearEntity.setName(element2.text());
+                    crawlerDao.saveCarYear(carYearEntity);
+                }
+            } else if (i == 1) {
+                // 排量
+                Elements children = element.children();
+                for (Element element2 : children) {
+                    CarCcEntity carCcEntity = new CarCcEntity();
+                    carCcEntity.setCarClassId(Integer.valueOf(carClassId));
+                    String[] onclicks = element2.attr("onclick").split(",");
+                    carCcEntity.setId(Integer.valueOf(onclicks[3]));
+                    carCcEntity.setName(element2.text());
+                    crawlerDao.saveCarCc(carCcEntity);
+                }
             }
         }
     }
