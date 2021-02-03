@@ -4,10 +4,7 @@ import cn.wanghaomiao.seimi.def.BaseSeimiCrawler;
 import cn.wanghaomiao.seimi.struct.Request;
 import cn.wanghaomiao.seimi.struct.Response;
 import com.mingzhang.jiegon.dao.CrawlerDao;
-import com.mingzhang.jiegon.entity.CarCcEntity;
-import com.mingzhang.jiegon.entity.CarClassEntity;
-import com.mingzhang.jiegon.entity.CarListEntity;
-import com.mingzhang.jiegon.entity.CarYearEntity;
+import com.mingzhang.jiegon.entity.*;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.seimicrawler.xpath.JXDocument;
@@ -98,6 +95,20 @@ public class CarCrawler extends BaseSeimiCrawler {
     public void getType2(Response response) {
         String carClassId = response.getRealUrl().substring(response.getRealUrl().lastIndexOf("=") + 1);
         JXDocument doc = response.document();
+        Object submenulist = doc.selOne("//ul[@class='submenulist']");
+        Element submenulistEl = (Element) submenulist;
+        Elements children1 = submenulistEl.children();
+        for (Element element : children1) {
+            String href = element.attr("href");
+            Elements submenulist_item = element.getElementsByClass("submenulist_item");
+            String name = submenulist_item.get(0).child(0).text();
+            CarDetailsEntity carDetailsEntity = new CarDetailsEntity();
+            carDetailsEntity.setCarClassId(Integer.valueOf(carClassId));
+            carDetailsEntity.setCarYearId(Integer.valueOf());
+            carDetailsEntity.setCarCcId(Integer.valueOf());
+            carDetailsEntity.setId(Integer.valueOf(submenulist_item.get(0).attr("data-id")));
+            carDetailsEntity.setName(name);
+        }
         List<Object> sels = doc.sel("//div[@class='asidesubmenu_top_cont']");
         for (int i = 0; i < sels.size(); i++) {
             Element element = (Element) sels.get(i);
