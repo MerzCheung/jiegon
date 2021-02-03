@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan(value = "com.mingzhang.jiegon.*")
+@MapperScan(value = "com.mingzhang.jiegon.dao.*")
 public class JiegonApplication {
 
     public static void main(String[] args) {

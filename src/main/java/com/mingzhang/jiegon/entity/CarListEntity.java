@@ -1,4 +1,4 @@
-package com.mingzhang.jiegon;
+package com.mingzhang.jiegon.entity;
 
 import lombok.Data;
 

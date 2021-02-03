@@ -3,6 +3,9 @@ package com.mingzhang.jiegon;
 import cn.wanghaomiao.seimi.def.BaseSeimiCrawler;
 import cn.wanghaomiao.seimi.struct.Request;
 import cn.wanghaomiao.seimi.struct.Response;
+import com.mingzhang.jiegon.dao.CrawlerDao;
+import com.mingzhang.jiegon.entity.CarClassEntity;
+import com.mingzhang.jiegon.entity.CarListEntity;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.seimicrawler.xpath.JXDocument;
@@ -48,10 +51,11 @@ public class CarCrawler extends BaseSeimiCrawler {
                     String id = jxDocument2.selOne("//@data-id").toString();
 
                     CarListEntity carListEntity = new CarListEntity();
+                    carListEntity.setId(Integer.valueOf(id));
                     carListEntity.setLayerModel(layerModel);
                     carListEntity.setName(name);
                     carListEntity.setImg(img);
-                    crawlerDao.save(carListEntity);
+                    crawlerDao.saveCarList(carListEntity);
                     if (id.equals("1")) {
                         push(Request.build(String.format(BRAND_URL, id), CarCrawler::getBrand));
                     }
@@ -63,7 +67,24 @@ public class CarCrawler extends BaseSeimiCrawler {
     }
 
     public void getBrand(Response response) {
+        String carListId = response.getRealUrl().substring(response.getRealUrl().lastIndexOf("=") + 1);
         JXDocument doc = response.document();
-
+        Object ele = doc.selOne("//div[@class='asidesubmenu_lists']");
+        Element element = (Element) ele;
+        Elements children = element.children();
+        String carType = null;
+        for (Element el : children) {
+            if ("div".equals(el.tagName())) {
+                carType = el.child(0).text();
+            } else if ("a".equals(el.tagName())) {
+                CarClassEntity carClassEntity = new CarClassEntity();
+                carClassEntity.setCarListId(Integer.valueOf(carListId));
+                carClassEntity.setCarType(carType);
+                String href = el.attr("href");
+                carClassEntity.setId(Integer.valueOf(href.substring(href.lastIndexOf("=") + 1)));
+                carClassEntity.setCarStyle(el.text());
+                crawlerDao.saveCarClass(carClassEntity);
+            }
+        }
     }
 }
