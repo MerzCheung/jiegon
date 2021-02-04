@@ -68,7 +68,6 @@ CREATE TABLE `car_details` (
 drop table if exists car_accumulator_config;
 CREATE TABLE `car_accumulator_config` (
   `tb_id` BIGINT(32) NOT NULL AUTO_INCREMENT COMMENT '系统主键',
-  `id` BIGINT(32) NOT NULL COMMENT '主键',
   `car_details_id` BIGINT(32) NOT NULL COMMENT '车辆型号主键ID',
   `type` varchar(100) DEFAULT NULL COMMENT '电池种类',
   `name` varchar(100) DEFAULT NULL COMMENT '参考名称',

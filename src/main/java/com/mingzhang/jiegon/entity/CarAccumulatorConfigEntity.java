@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class CarAccumulatorConfigEntity {
     private Integer tbId;
-    private Integer id;
     private Integer carDetailsId;
     private String type;
     private String name;
