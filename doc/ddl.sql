@@ -9,7 +9,7 @@ CREATE TABLE `car_list` (
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`tb_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='车辆品牌列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='车辆品牌列表';
 
 
 drop table if exists car_class;
@@ -23,7 +23,7 @@ CREATE TABLE `car_class` (
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`tb_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='车辆型号列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='车辆型号列表';
 
 
 drop table if exists car_year;
@@ -36,7 +36,7 @@ CREATE TABLE `car_year` (
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`tb_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='年限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='年限';
 
 drop table if exists car_cc;
 CREATE TABLE `car_cc` (
@@ -48,7 +48,7 @@ CREATE TABLE `car_cc` (
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`tb_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='排量';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='排量';
 
 drop table if exists car_details;
 CREATE TABLE `car_details` (
@@ -62,7 +62,7 @@ CREATE TABLE `car_details` (
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`tb_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='车辆型号详情列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='车辆型号详情列表';
 
 
 drop table if exists car_accumulator_config;
@@ -79,7 +79,7 @@ CREATE TABLE `car_accumulator_config` (
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`tb_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='车辆蓄电池配置详情';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='车辆蓄电池配置详情';
 
 drop table if exists car_accumulator_list;
 CREATE TABLE `car_accumulator_list` (
@@ -91,4 +91,4 @@ CREATE TABLE `car_accumulator_list` (
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`tb_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='车辆蓄电池配置列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='车辆蓄电池配置列表';

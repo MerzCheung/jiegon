@@ -61,9 +61,12 @@ public class CarCrawler extends BaseSeimiCrawler {
                     carListEntity.setName(name);
                     carListEntity.setImg(img);
                     crawlerDao.saveCarList(carListEntity);
-                    push(Request.build(String.format(TYPE1_URL, id), CarCrawler::getType1));
+                    if (!"热门品牌".equals(layerModel)) {
+                        push(Request.build(String.format(TYPE1_URL, id), CarCrawler::getType1));
+                    }
                 }
             }
+            System.out.println("start done");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,6 +96,7 @@ public class CarCrawler extends BaseSeimiCrawler {
                     push(Request.build(String.format(TYPE2_URL, id), CarCrawler::getType2));
                 }
             }
+            System.out.println("getType1 done");
         } catch (Exception e) {
             e.printStackTrace();
             log.error("url: {}", url);
@@ -144,6 +148,7 @@ public class CarCrawler extends BaseSeimiCrawler {
                     push(Request.build(String.format(CAR_URL, carClassId, cc, year), CarCrawler::getCarList));
                 }
             }
+            System.out.println("getType2 done");
         } catch (Exception e) {
             e.printStackTrace();
             log.error("url: {}", url);
@@ -173,6 +178,7 @@ public class CarCrawler extends BaseSeimiCrawler {
                 crawlerDao.saveCarDetails(carDetailsEntity);
                 push(Request.build(String.format(ACCUMULATOR_URL, carClassId, ccId, yearId, submenulistItem.get(0).attr("data-id")), CarCrawler::getAccumulator));
             }
+            System.out.println("getCarList done");
         } catch (Exception e) {
             e.printStackTrace();
             log.error("url: {}", url);
@@ -224,6 +230,7 @@ public class CarCrawler extends BaseSeimiCrawler {
                 carAccumulatorListEntity.setName(el.child(0).child(0).text().trim());
                 crawlerDao.saveAccumulatorList(carAccumulatorListEntity);
             }
+            System.out.println("getAccumulator done");
         } catch (Exception e) {
             e.printStackTrace();
             log.error("url: {}", url);
