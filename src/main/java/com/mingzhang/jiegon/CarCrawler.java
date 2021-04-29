@@ -5,6 +5,7 @@ import cn.wanghaomiao.seimi.struct.Request;
 import cn.wanghaomiao.seimi.struct.Response;
 import com.mingzhang.jiegon.dao.CrawlerDao;
 import com.mingzhang.jiegon.entity.*;
+import jodd.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -196,24 +197,25 @@ public class CarCrawler extends BaseSeimiCrawler {
             carAccumulatorConfigEntity.setCarDetailsId(Integer.valueOf(carDetailsId));
             for (int i = 0; i < sel.size(); i++) {
                 Element el = (Element) sel.get(i);
+                String name = el.child(0).text();
                 String val = el.child(1).text();
-                switch (i) {
-                    case 0:
+                switch (name) {
+                    case "电池种类":
                         carAccumulatorConfigEntity.setType(val);
                         break;
-                    case 1:
+                    case "参考名称":
                         carAccumulatorConfigEntity.setName(val);
                         break;
-                    case 2:
+                    case "电池容量":
                         carAccumulatorConfigEntity.setCapacity(val);
                         break;
-                    case 3:
+                    case "规格尺寸":
                         carAccumulatorConfigEntity.setSpecification(val);
                         break;
-                    case 4:
+                    case "端柱类型":
                         carAccumulatorConfigEntity.setPillarType(val);
                         break;
-                    case 5:
+                    case "极性固定":
                         carAccumulatorConfigEntity.setFixedPolarity(val);
                         break;
                     default:
@@ -227,7 +229,11 @@ public class CarCrawler extends BaseSeimiCrawler {
                 CarAccumulatorListEntity carAccumulatorListEntity = new CarAccumulatorListEntity();
                 carAccumulatorListEntity.setId(Integer.valueOf(el.child(0).attr("data-id")));
                 carAccumulatorListEntity.setCarDetailsId(Integer.valueOf(carDetailsId));
-                carAccumulatorListEntity.setName(el.child(0).child(0).text().trim());
+                String name = el.child(0).text().trim().replace("\"", "");
+                if (StringUtil.isBlank(name)) {
+                    name = el.child(0).child(0).text().trim();
+                }
+                carAccumulatorListEntity.setName(name);
                 crawlerDao.saveAccumulatorList(carAccumulatorListEntity);
             }
             System.out.println("getAccumulator done");
